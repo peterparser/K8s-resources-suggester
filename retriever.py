@@ -9,7 +9,8 @@ class Retriever:
         self.resources = client.AppsV1Api()
         self.retrieve_function = {
             "deployment": self.resources.list_namespaced_deployment,
-            "statefulset": self.resources.list_namespaced_stateful_set
+            "statefulset": self.resources.list_namespaced_stateful_set,
+            "daemonset": self.resources.list_namespaced_daemon_set
         }
 
     def get_mem_cpu_req_lim(self, namespace):
@@ -18,6 +19,8 @@ class Retriever:
         for object_type, function in self.retrieve_function.items():
             k8s_objects = function(namespace)
             for k8s_object in k8s_objects.items:
+                replicas = k8s_object.spec.replicas
+                name = k8s_object.metadata.name
                 for container in k8s_object.spec.template.spec.containers:
                     if container.resources.requests:
                         request_cpu = container.resources.requests.get("cpu", "Not defined")
@@ -31,9 +34,9 @@ class Retriever:
                     else:
                         limit_cpu = "Not Defined"
                         limit_memory = "Not Defined"
-                    results.append((namespace, object_type, k8s_object.metadata.name,
-                                    container.name, k8s_object.spec.replicas,
-                                    request_cpu, request_memory,
-                                    limit_cpu, limit_memory))
+                    results.append((namespace, object_type, name,
+                                    container.name, replicas,
+                                    request_cpu, limit_cpu,
+                                    request_memory, limit_memory))
 
         return results

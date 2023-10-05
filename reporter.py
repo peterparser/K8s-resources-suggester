@@ -9,7 +9,6 @@ class Reporter:
         self.workbook.active.append(headers)
         self.end_column = chr(ord('A') + len(headers) - 1)
 
-
     def write_data_to_table(self, data):
         for row in data:
             self.workbook.active.append(row)

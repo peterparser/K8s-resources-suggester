@@ -51,7 +51,9 @@ if __name__ == '__main__':
         data.extend(retriever.get_mem_cpu_req_lim(ns))
     print("Data obtained from K8s APIs...")
     print("Obtaining and calculating data from Prometheus...")
-    suggested = list(map(lambda x: suggester.suggest_values(x), data))
+
+    # Filter replicas = 0
+    suggested = list(map(lambda x: suggester.suggest_values(x), filter(lambda x: x[4] != 0, data)))
 
     reporter = Reporter(header)
 

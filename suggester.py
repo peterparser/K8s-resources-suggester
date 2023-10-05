@@ -17,13 +17,14 @@ class Suggester:
         #Pe i pod avg_over_time(container_memory_working_set_bytes{pod=~'snitch-jvm.*',namespace='snitch',container='snitch-jvm'}[7d])
         # Retrieve pod memory usage
         params_memory_request = {
-            "query": f"avg_over_time(container_memory_working_set_bytes{{pod=~'{k8s_object[2]}.*',namespace='{k8s_object[0]}',container='{k8s_object[3]}'}}[{self.time_range}])"
+            "query": f"avg_over_time(container_memory_working_set_bytes{{pod=~'{k8s_object[2]}.*',namespace='{k8s_object[0]}',container=''}}[{self.time_range}])"
         }
+
         response = requests.get(f"{self.prometheus_host}/api/v1/query", headers=headers, params=params_memory_request, verify=False)
         memoryRequest = f'{round(float(response.json()["data"]["result"][0]["value"][1]) / 1000000)} M'
 
         params_memory_limit = {
-            "query": f"max_over_time(container_memory_working_set_bytes{{pod=~'{k8s_object[2]}.*',namespace='{k8s_object[0]}',container='{k8s_object[3]}'}}[{self.time_range}])"
+            "query": f"max_over_time(container_memory_working_set_bytes{{pod=~'{k8s_object[2]}.*',namespace='{k8s_object[0]}',container=''}}[{self.time_range}])"
         }
 
         response = requests.get(f"{self.prometheus_host}/api/v1/query", headers=headers, params=params_memory_limit,
