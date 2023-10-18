@@ -17,7 +17,7 @@ pip3 install -r requirements.txt
 
 # Invocation
 ```commandline
-python3 main.py -u <prometheus URL> -n <comma separated list of namespaces> [-o <output-file>]
+python3 main.py -u <prometheus URL> -n <comma separated list of namespaces> [-t {kubernetes|openshift}] [-o <output-file>]
 ```
 Example
 ```commandline
