@@ -10,7 +10,6 @@ class Retriever:
         self.retrieve_function = {
             "deployment": self.resources.list_namespaced_deployment,
             "statefulset": self.resources.list_namespaced_stateful_set,
-            "daemonset": self.resources.list_namespaced_daemon_set
         }
 
     def get_mem_cpu_req_lim(self, namespace):
