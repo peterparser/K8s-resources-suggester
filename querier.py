@@ -15,11 +15,11 @@ queries = {
             "query_type": "query"
         },
         "cpu_request": {
-            "query": "sum(rate(container_cpu_usage_seconds_total{{pod=~'{workload}.*',namespace='{namespace}'}}[2m]))",
+            "query": "avg(rate(container_cpu_usage_seconds_total{{pod=~'{workload}.*',namespace='{namespace}', container=''}}[1m]))",
             "query_type": "query_range"
         },
         "cpu_limit": {
-            "query": "sum(rate(container_cpu_usage_seconds_total{{pod=~'{workload}.*',namespace='{namespace}'}}[2m]))",
+            "query": "avg(rate(container_cpu_usage_seconds_total{{pod=~'{workload}.*',namespace='{namespace}', container=''}}[1m]))",
             "query_type": "query_range"
         }
 
@@ -56,7 +56,9 @@ def handle_memory(result):
 
 def handle_cpu(result, aggregator):
     if result[0]["values"]:
-        return  f'{round(aggregator(result[0]["values"][1]), 2)}'
+        values = map(lambda x: float(x[1]), result[0]["values"])
+
+        return  f'{round(aggregator(values), 2)}'
     else:
         return f'{round(float(result[0]["value"][1]), 2)}'
     

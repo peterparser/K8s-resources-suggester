@@ -26,7 +26,7 @@ class Suggester:
             case "query":
                 params = {
                     "query": self.queries[metric]["query"].format(
-                        workload=k8s_object[2],
+                        workload=k8s_object[9],
                         namespace=k8s_object[0],
                         time_range=self.time_range
                         )
@@ -34,7 +34,7 @@ class Suggester:
             case "query_range":
                 params = {
                     "query": self.queries[metric]["query"].format(
-                        workload=k8s_object[2],
+                        workload=k8s_object[9],
                         namespace=k8s_object[0],
                         time_range=self.time_range
                         ),
@@ -56,8 +56,8 @@ class Suggester:
 
         for metric, query_struct in self.queries.items():
             host, params = self.build_query(k8s_object, metric)
-            result = querier.run_query(host, params)
-            result[metric] = querier.handle_response(metric, result, self.aggregator.get(metric, None))
+            result = querier.run_query(host, headers, params)
+            results[metric] = querier.handle_response(metric, result, self.aggregator.get(metric, None))
 
         return [
             k8s_object[0], # Namespace
@@ -66,13 +66,13 @@ class Suggester:
             k8s_object[3], # Container
             k8s_object[4], # Replicas
             k8s_object[5], # Request CPU
-            result["cpu_request"], # suggested
+            results["cpu_request"], # suggested
             k8s_object[6], # CPU LIMIT,
-            result["cpu_limit"],
+            results["cpu_limit"],
             k8s_object[7], # Memory request
-            result["memory_request"], # suggest
+            results["memory_request"], # suggest
             k8s_object[8], # memory limit
-            result["memory_limit"] # suggest
+            results["memory_limit"] # suggest
         ]
 
 

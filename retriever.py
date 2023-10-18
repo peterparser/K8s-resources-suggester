@@ -33,9 +33,19 @@ class Retriever:
                     else:
                         limit_cpu = "Not Defined"
                         limit_memory = "Not Defined"
+
+                    if object_type == 'deployment':
+                        for status in k8s_object.status.conditions:
+                            if status.type == 'Progressing':
+                                replicaset_name = status.message.split(" ")[1].replace('"', "")
+                                regex = f'{replicaset_name}.*'
+                                break
+                    else:
+                        regex = f'{name}-[0-9]+'
+                    print(regex)
                     results.append((namespace, object_type, name,
                                     container.name, replicas,
                                     request_cpu, limit_cpu,
-                                    request_memory, limit_memory))
+                                    request_memory, limit_memory, regex))
 
         return results
