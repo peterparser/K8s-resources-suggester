@@ -3,9 +3,6 @@
 This tool simplifies the gathering of data about the resource consumption of your pods.
 In particular, it outputs an excel table with the current configuration of your deployments and statefulsets and their resources, also the tool estimates the requests and the limits based on prometheus data.
 
-# DISCLAIMER
-At the moment the tool has been tested only against Openshift Clusters, a more agnostic version is coming soon!
-
 # Requirements
 To run the script you need:
 * An authenticated kubectl session

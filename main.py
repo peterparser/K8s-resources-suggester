@@ -36,14 +36,16 @@ if __name__ == '__main__':
         epilog='RRS')
 
     parser.add_argument("-u", "--url", help="Prometheus URL", type=str, required=True)
+    parser.add_argument("-t", "--type", choices=['kubernetes', 'openshift'], default="kubernetes", help="Kubernetes flavour", type=str)
     parser.add_argument("-n", "--namespaces", help="Comma separated list of namespaces", type=str, required=True)
     parser.add_argument("-o", "--output", default="output.xlsx", help="Output file", type=str)
+
     args = parser.parse_args()
     token = getpass.getpass("Insert SA Token here:")
 
     config.load_kube_config()
     retriever = Retriever()
-    suggester = Suggester(args.url, token)
+    suggester = Suggester(args.url, token, args.type)
     namespaces = args.namespaces.split(",")
 
     data = []
